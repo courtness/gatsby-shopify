@@ -14,15 +14,15 @@ const ProductGrid = ({ heading, products }) => {
           {products.map(product => (
             <li key={product.handle} className="grid-end-4">
               <Link to={product.slug}>
-                <figure className="square overflow-hidden">
+                <figure className="square overflow-hidden border">
                   <img
-                    className="w-full absolute transform-center border"
+                    className="w-full absolute transform-center"
                     src={product.images[0].originalSrc}
                     alt={product.handle}
                   />
                 </figure>
 
-                <h2 className="mt-2 f5">{product.title}</h2>
+                <h2 className="mt-2 f5">{product.frontmatter.title}</h2>
                 <h2 className="mt-2 f5">${product.variants[0].price}</h2>
               </Link>
             </li>

@@ -1,0 +1,124 @@
+# backend:
+# name: git-gateway
+# repo: loveandmoney/sitekey
+# branch: master
+
+# site_url: https://sitekey.netlify.com/
+
+media_folder: static/uploads
+public_folder: uploads
+
+collections:
+  - name: pages
+    label: Pages
+    editor:
+      preview: false
+    files:
+      - file: src/pages/index.md
+        label: Home
+        name: home
+        fields:
+          - label: Template Key
+            name: templateKey
+            widget: hidden
+            default: index-page
+
+          - label: Title
+            name: title
+            widget: string
+            hint: This is used both by the title meta tag and the <h1> tag in the HTML.
+
+          - label: Components
+            name: components
+            widget: list
+            types:
+              - label: Image
+                name: image
+                fields:
+                  - label: Image Source
+                    name: imageSource
+                    widget: image
+
+              - label: Carousel
+                name: carousel
+                fields:
+                  - label: Carousel Images
+                    name: carouselImages
+                    widget: list
+                    field:
+                      {
+                        label: Carousel Image,
+                        name: carouselImage,
+                        widget: image,
+                      }
+
+              - label: Video
+                name: video
+                fields:
+                  - label: Video URL
+                    name: videoURL
+                    widget: string
+
+          - label: SEO Description
+            name: description
+            required: false
+            widget: string
+            hint: This is used by the description meta tag.
+
+          - label: SEO Keywords
+            name: keywords
+            required: false
+            widget: string
+            hint: This is used by the keywords meta tag.
+
+      - file: src/pages/about/index.md
+        label: About
+        name: about
+        fields:
+          - label: Template Key
+            name: templateKey
+            widget: hidden
+            default: about-page
+
+          - label: Title
+            name: title
+            widget: string
+            hint: This is used both by the title meta tag and the <h1> tag in the HTML.
+
+          - label: SEO Description
+            name: description
+            required: false
+            widget: string
+            hint: This is used by the description meta tag.
+
+          - label: SEO Keywords
+            name: keywords
+            required: false
+            widget: string
+            hint: This is used by the keywords meta tag.
+
+      - file: src/pages/contact/index.md
+        label: Contact
+        name: contact
+        fields:
+          - label: Template Key
+            name: templateKey
+            widget: hidden
+            default: contact-page
+
+          - label: Title
+            name: title
+            widget: string
+            hint: This is used both by the title meta tag and the <h1> tag in the HTML.
+
+          - label: SEO Description
+            name: description
+            required: false
+            widget: string
+            hint: This is used by the description meta tag.
+
+          - label: SEO Keywords
+            name: keywords
+            required: false
+            widget: string
+            hint: This is used by the keywords meta tag.

@@ -1,0 +1,53 @@
+/* eslint-disable react/prop-types */
+// import { PropTypes } from "prop-types";
+
+import React from "react";
+import { graphql } from "gatsby";
+import DummyImage from "~components/DummyImage";
+import Footer from "~components/Footer";
+import Layout from "~components/Layout";
+import Newsletter from "~components/Newsletter";
+import SEO from "~components/SEO";
+
+const ShippingPage = ({ data, location }) => {
+  const { frontmatter } = data.markdownRemark;
+
+  return (
+    <>
+      <SEO
+        customTitle={frontmatter.title}
+        customDescription={frontmatter.seoDescription}
+        customKeywords={frontmatter.seoKeywords}
+        path={location.pathname}
+      />
+
+      <Layout className="shipping-page w-full relative">
+        <DummyImage />
+
+        <section className="w-full relative block py-24">
+          <article className="grid">
+            <h1 className="grid-end-12 f1 text-center">{frontmatter.title}</h1>
+          </article>
+        </section>
+
+        <Newsletter />
+      </Layout>
+
+      <Footer />
+    </>
+  );
+};
+
+export default ShippingPage;
+
+export const query = graphql`
+  query ShippingPage($id: String!) {
+    markdownRemark(id: { eq: $id }) {
+      frontmatter {
+        title
+        seoDescription
+        seoKeywords
+      }
+    }
+  }
+`;

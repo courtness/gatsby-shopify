@@ -2,16 +2,22 @@ import React from "react";
 import { Link } from "gatsby";
 import PropTypes from "prop-types";
 
-const ProductGrid = ({ heading, products }) => {
+const ProductGrid = ({ heading, max, products }) => {
+  let renderedProducts = products;
+
+  if (max) {
+    renderedProducts = products.slice(0, max);
+  }
+
   return (
     <section className="w-full relative pt-24 pb-24">
       <header className="grid">
         <h3 className="grid-end-12 mb-12 f3">{heading}</h3>
       </header>
 
-      {products?.[0] && (
+      {renderedProducts?.[0] && (
         <ul className="grid">
-          {products.map(product => (
+          {renderedProducts.map(product => (
             <li key={product.handle} className="grid-end-4 mb-8">
               <Link to={product.slug}>
                 <figure className="square overflow-hidden border">
@@ -34,12 +40,14 @@ const ProductGrid = ({ heading, products }) => {
 };
 
 ProductGrid.defaultProps = {
-  heading: `Products`
+  heading: `Products`,
+  max: null
 };
 
 ProductGrid.propTypes = {
   heading: PropTypes.string,
-  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  max: PropTypes.number
 };
 
 export default ProductGrid;

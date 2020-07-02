@@ -41,7 +41,7 @@ const IndexPage = ({ data, location }) => {
         <ImageCTA align="right" content="what a moment" />
         <ImageCTA content="wow still going" />
 
-        <ProductGrid products={products} />
+        <ProductGrid max={3} products={products} />
 
         <BlogCTA content="blogs are still good right" />
 

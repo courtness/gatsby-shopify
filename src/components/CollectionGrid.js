@@ -2,17 +2,23 @@ import React from "react";
 import { Link } from "gatsby";
 import PropTypes from "prop-types";
 
-const CollectionGrid = ({ heading, collections }) => {
+const CollectionGrid = ({ heading, collections, max }) => {
+  let renderedCollections = collections;
+
+  if (max) {
+    renderedCollections = collections.slice(0, max);
+  }
+
   return (
     <section className="w-full relative pt-24 pb-24">
       <header className="grid">
         <h3 className="grid-end-12 mb-12 f3">{heading}</h3>
       </header>
 
-      {collections?.[0] && (
+      {renderedCollections?.[0] && (
         <section className="w-full relative">
           <ul className="grid">
-            {collections.map((collection, collectionIndex) => {
+            {renderedCollections.map((collection, collectionIndex) => {
               const key = `collection-${collectionIndex}`;
 
               return (
@@ -39,12 +45,14 @@ const CollectionGrid = ({ heading, collections }) => {
 };
 
 CollectionGrid.defaultProps = {
-  heading: `Collections`
+  heading: `Collections`,
+  max: null
 };
 
 CollectionGrid.propTypes = {
+  collections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   heading: PropTypes.string,
-  collections: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  max: PropTypes.number
 };
 
 export default CollectionGrid;

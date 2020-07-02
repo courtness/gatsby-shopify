@@ -2,17 +2,23 @@ import React from "react";
 import { Link } from "gatsby";
 import PropTypes from "prop-types";
 
-const ArticleGrid = ({ articles, heading }) => {
+const ArticleGrid = ({ articles, heading, max }) => {
+  let renderedArticles = articles;
+
+  if (max) {
+    renderedArticles = articles.slice(0, max);
+  }
+
   return (
     <section className="w-full relative pt-24 pb-24">
       <header className="grid">
         <h3 className="grid-end-12 mb-12 f3">{heading}</h3>
       </header>
 
-      {articles?.[0] && (
+      {renderedArticles?.[0] && (
         <section className="w-full relative">
           <ul className="grid">
-            {articles.map((article, articleIndex) => {
+            {renderedArticles.map((article, articleIndex) => {
               const key = `article-${articleIndex}`;
 
               return (
@@ -39,12 +45,14 @@ const ArticleGrid = ({ articles, heading }) => {
 };
 
 ArticleGrid.defaultProps = {
-  heading: `Blog`
+  heading: `Blog`,
+  max: null
 };
 
 ArticleGrid.propTypes = {
   articles: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  heading: PropTypes.string
+  heading: PropTypes.string,
+  max: PropTypes.number
 };
 
 export default ArticleGrid;

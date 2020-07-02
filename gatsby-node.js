@@ -108,20 +108,20 @@ exports.createPages = ({ graphql, actions }) => {
           console.log(
             `${chalk.blue(`createPages → shopify [markdown] |`)} ${pagePath}`
           );
+
+          createPage({
+            path: pagePath,
+            component: path.resolve(`src/templates/product-page.js`),
+            context: {
+              markdownId,
+              handle
+            }
+          });
         } else {
           console.log(
-            `${chalk.green(`createPages → shopify [defaults] |`)} ${pagePath}`
+            `${chalk.green(`createPages → shopify [omitted] |`)} ${pagePath}`
           );
         }
-
-        createPage({
-          path: pagePath,
-          component: path.resolve(`src/templates/product-page.js`),
-          context: {
-            markdownId,
-            handle
-          }
-        });
       });
     });
 

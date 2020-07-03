@@ -18,7 +18,7 @@ const ProductGrid = ({ heading, max, products }) => {
       {renderedProducts?.[0] && (
         <ul className="grid">
           {renderedProducts.map(product => (
-            <li key={product.handle} className="grid-end-4 mb-8">
+            <li key={product.handle} className="grid-end-4 xs:grid-end-12 mb-8">
               <Link to={product.slug}>
                 <figure className="square overflow-hidden border">
                   <img

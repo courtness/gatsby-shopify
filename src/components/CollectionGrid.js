@@ -22,7 +22,10 @@ const CollectionGrid = ({ heading, collections, max }) => {
               const key = `collection-${collectionIndex}`;
 
               return (
-                <li key={key} className="grid-end-4 relative block">
+                <li
+                  key={key}
+                  className="grid-end-4 xs:grid-end-12 relative block"
+                >
                   <Link to={collection.fields.slug}>
                     <figure className="square border">
                       <img

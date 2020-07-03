@@ -34,7 +34,7 @@ $nav_menu_width: 480px;
 
   &__menu {
     @include xs {
-      transform: translate3d(100vw, 0, 0);
+      transform: translate3d(-100vw, 0, 0);
 
       width: 100vw;
     }

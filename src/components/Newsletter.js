@@ -62,7 +62,7 @@ const Newsletter = () => {
     <section className="w-full relative pt-8 pb-12 overflow-hidden bg-black text-white">
       <div className="w-full h-full absolute top-0 right-0 bottom-0 left-0">
         <img
-          className="w-full absolute opacity-50 transform-center"
+          className="w-full xs:w-auto xs:h-full absolute opacity-50 transform-center"
           src={doge}
           alt="doge"
         />
@@ -73,7 +73,7 @@ const Newsletter = () => {
         <h2 className="grid-end-12 mb-8 b1">Sign up, or whatever.</h2>
 
         <input
-          className="grid-end-3 h-12 relative block px-2 border-black bg-white b1 text-black"
+          className="grid-end-3 xs:grid-end-12 h-12 relative block px-2 border-black bg-white b1 text-black"
           onChange={e => {
             setInteracted(true);
             setFormData({ ...formData, name: e.target.value });
@@ -83,7 +83,7 @@ const Newsletter = () => {
         />
 
         <input
-          className="grid-end-3 h-12 relative block px-2 border-black bg-white b1 text-black"
+          className="grid-end-3 xs:grid-end-12 h-12 relative block px-2 border-black bg-white b1 text-black"
           onChange={e => {
             setInteracted(true);
             setFormData({ ...formData, email: e.target.value });
@@ -97,7 +97,7 @@ const Newsletter = () => {
             valid && !submitting && !submitted
               ? ``
               : `opacity-50 pointer-events-none`
-          } grid-end-2 grid-start-1 button button--white relative mt-4 py-4 cursor-pointer caption uppercase`}
+          } grid-end-2 xs:grid-end-12 grid-start-1 button button--white relative mt-4 py-4 cursor-pointer caption uppercase`}
           type="submit"
           value={buttonText}
         />

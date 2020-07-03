@@ -85,7 +85,7 @@ const ProductPage = ({ data, location }) => {
       <Layout className="product-page w-full relative">
         <section className="grid">
           {product && (
-            <div className="animation-appear-left animation-delay-2 grid-end-4 grid-start-2 h-screen sticky top-0 left-0 flex items-center justify-center">
+            <div className="animation-appear-left animation-delay-2 grid-end-4 xs:grid-end-12 grid-start-2 xs:grid-start-1 h-screen sticky xs:relative top-0 xs:top-auto left-0 xs:left-auto flex items-center justify-center">
               <article className="flex flex-col items-center">
                 <Link
                   to="/products"
@@ -99,7 +99,9 @@ const ProductPage = ({ data, location }) => {
 
                 <h3 className="w-full mt-2 f3">${product.variants[0].price}</h3>
 
-                <p className="w-full mt-8 b1">{product.description}</p>
+                <p className="w-full mt-8 b1">
+                  {product.description.substring(0, 100)}...
+                </p>
 
                 <select
                   className="w-full mt-4 border"
@@ -123,7 +125,7 @@ const ProductPage = ({ data, location }) => {
           )}
 
           {product && (
-            <article className="animation-appear-right animation-delay-2 grid-end-6 grid-start-7">
+            <article className="animation-appear-right animation-delay-2 grid-end-6 xs:grid-end-12 grid-start-7 xs:grid-start-1 xs:mb-4">
               <figure className="square overflow-hidden border">
                 <img
                   className="w-full absolute transform-center"

@@ -97,7 +97,7 @@ const Newsletter = () => {
             valid && !submitting && !submitted
               ? ``
               : `opacity-50 pointer-events-none`
-          } grid-end-2 xs:grid-end-12 grid-start-1 button button--white relative mt-4 py-4 cursor-pointer caption uppercase`}
+          } grid-end-2 xs:grid-end-12 grid-start-1 button button--white relative mt-4 xs:mt-1 py-4 cursor-pointer caption uppercase`}
           type="submit"
           value={buttonText}
         />

@@ -125,22 +125,22 @@ const ProductPage = ({ data, location }) => {
           )}
 
           {product && (
-            <article className="animation-appear-right animation-delay-2 grid-end-6 xs:grid-end-12 grid-start-7 xs:grid-start-1 xs:mb-4">
-              <figure className="square overflow-hidden border">
+            <article className="animation-appear-right animation-delay-2 grid-end-6 xs:grid-end-12 grid-start-7 xs:grid-start-1">
+              <figure className="square overflow-hidden border xs:mb-4">
                 <img
                   className="w-full absolute transform-center"
                   src={product.images[0].originalSrc}
                   alt={product.handle}
                 />
               </figure>
-              <figure className="square overflow-hidden border">
+              <figure className="square overflow-hidden border xs:mb-4">
                 <img
                   className="w-full absolute transform-center"
                   src={product.images[0].originalSrc}
                   alt={product.handle}
                 />
               </figure>
-              <figure className="square overflow-hidden border">
+              <figure className="square overflow-hidden border xs:mb-4">
                 <img
                   className="w-full absolute transform-center"
                   src={product.images[0].originalSrc}

@@ -266,3 +266,39 @@ export function getProductByHandle(handle, products) {
 
   return matchedProduct;
 }
+
+export function getSelectableOptions(product) {
+  const selectableOptions = {};
+
+  product.variants.forEach(variant => {
+    variant.selectedOptions.forEach(selectedOption => {
+      if (!selectableOptions[selectedOption.name]) {
+        selectableOptions[selectedOption.name] = [];
+      }
+
+      if (
+        !selectableOptions[selectedOption.name].includes(selectedOption.value)
+      ) {
+        selectableOptions[selectedOption.name].push(selectedOption.value);
+      }
+    });
+  });
+
+  Object.keys(selectableOptions).forEach(selectableOptionKey => {
+    if (selectableOptions[selectableOptionKey].length <= 1) {
+      delete selectableOptions[selectableOptionKey];
+    }
+  });
+
+  return selectableOptions;
+}
+
+export function truncateProductName(name, maxLength = 50) {
+  if (name.length > maxLength) {
+    name = name.substr(0, maxLength);
+    name = name.substr(0, Math.min(name.length, name.lastIndexOf(` `)));
+    name = `${name} ...`;
+  }
+
+  return name;
+}

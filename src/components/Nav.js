@@ -15,6 +15,7 @@ const Nav = () => {
     setCartActive,
     menuActive,
     setMenuActive,
+    //
     checkout,
     decreaseQuantityByCartIndex,
     increaseQuantityByCartIndex,

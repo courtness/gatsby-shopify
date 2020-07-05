@@ -16,15 +16,27 @@ import Arrow from "~components/svg/Arrow";
 import {
   getCheckoutIdByVariantTitle,
   getProductByHandle,
+  getSelectableOptions,
   parseProducts
 } from "~utils/shopify";
 
 const ProductPage = ({ data, location }) => {
   const { addToCart } = useContext(AppContext);
+  const [quantity, setQuantity] = useState(1);
+  const [addableProduct, setAddableProduct] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
+
   const { allShopifyAdminProduct, markdownRemark } = data;
   const { frontmatter } = markdownRemark;
-  const [product, setProduct] = useState(null);
   const products = parseProducts(data);
+  const product = getProductByHandle(frontmatter.shopifyHandle, products);
+  const options = getSelectableOptions(product);
+  const selectNewOption = (key, value) => {
+    setSelectedOptions({
+      ...selectedOptions,
+      [key]: value
+    });
+  };
 
   const setCheckoutId = variant => {
     if (!product) {
@@ -40,22 +52,33 @@ const ProductPage = ({ data, location }) => {
 
     productClone.variant = variant;
 
-    setProduct(productClone);
+    setAddableProduct(productClone);
   };
 
+  //----------------------------------------------------------------------------
   //
+  // onload hook
 
   useEffect(() => {
     const parsedProduct = getProductByHandle(
       frontmatter.shopifyHandle,
-      parseProducts(data)
+      products
     );
+
     const defaultVariant = parsedProduct.variants[0];
 
     parsedProduct.variant = defaultVariant;
 
-    setProduct(parsedProduct);
+    defaultVariant.selectedOptions.forEach(option => {
+      selectNewOption(option.name, option.value);
+    });
+
+    setAddableProduct(parsedProduct);
   }, []);
+
+  //----------------------------------------------------------------------------
+  //
+  // product initialisation hook
 
   useEffect(() => {
     if (!product || product.checkoutId) {
@@ -65,13 +88,68 @@ const ProductPage = ({ data, location }) => {
     setCheckoutId(product.variant);
   }, [product]);
 
-  const onSelectChange = e => {
-    if (!e?.target?.value) {
+  //----------------------------------------------------------------------------
+  //
+  // option update hook
+
+  useEffect(() => {
+    if (!product) {
       return;
     }
 
-    setCheckoutId(JSON.parse(e.target.value));
-  };
+    let matchedVariant;
+
+    product.variants.forEach(variant => {
+      if (matchedVariant) {
+        return;
+      }
+
+      const maximumOptionScore = variant.selectedOptions.length;
+      let matchedOptionScore = 0;
+
+      variant.selectedOptions.forEach(variantSelectedOption => {
+        if (matchedVariant) {
+          return;
+        }
+
+        Object.keys(selectedOptions).forEach(userSelectedOptionKey => {
+          if (
+            variantSelectedOption.name === userSelectedOptionKey &&
+            variantSelectedOption.value ===
+              selectedOptions[userSelectedOptionKey]
+          ) {
+            matchedOptionScore += 1;
+          }
+        });
+      });
+
+      variant.matchedOptionScore = matchedOptionScore;
+
+      if (matchedOptionScore === maximumOptionScore) {
+        matchedVariant = variant;
+      }
+    });
+
+    if (!matchedVariant) {
+      let fallbackVariant;
+      let maxMatchedOptionScore = -1;
+
+      product.variants.forEach(variant => {
+        if (variant.matchedOptionScore > maxMatchedOptionScore) {
+          maxMatchedOptionScore = variant.matchedOptionScore;
+          fallbackVariant = variant;
+        }
+      });
+
+      matchedVariant = fallbackVariant;
+    }
+
+    if (matchedVariant) {
+      setCheckoutId(matchedVariant);
+    }
+  }, [selectedOptions]);
+
+  //
 
   return (
     <>
@@ -103,21 +181,42 @@ const ProductPage = ({ data, location }) => {
                   {product.description.substring(0, 100)}...
                 </p>
 
-                <select
-                  className="w-full mt-4 border"
-                  onChange={onSelectChange}
-                >
-                  {product.variants.map(variant => (
-                    <option key={variant.id} value={JSON.stringify(variant)}>
-                      {variant.title}
-                    </option>
-                  ))}
-                </select>
+                {options && Object.keys(options).length > 0 && (
+                  <ul className="w-full relative block">
+                    {Object.keys(options).map(optionKey => {
+                      const optionValues = options[optionKey];
+
+                      let heading = optionKey;
+
+                      if (optionKey.toLowerCase() === `color`) {
+                        heading = `Colour`;
+                      }
+
+                      return (
+                        <li key={optionKey} className="mt-6">
+                          <select
+                            className="product-page__select w-full relative block mt-1 cursor-pointer b1 text-black"
+                            placeholder={heading}
+                            onChange={e => {
+                              selectNewOption(optionKey, e.target.value);
+                            }}
+                          >
+                            {optionValues.map(option => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
 
                 <Button
                   className="mt-12 px-20"
                   color="black"
-                  onClick={() => addToCart(product, 1)}
+                  onClick={() => addToCart(addableProduct, quantity)}
                   text="Add to cart"
                 />
               </article>

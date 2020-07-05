@@ -203,6 +203,21 @@ $fast-transition: $fast-transition-speed $ease-out-cubic;
 
 //
 
+@keyframes marquee {
+  0% {
+    transform: translate3d(50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animation-marquee {
+  animation: 6s linear marquee infinite;
+}
+
+//
+
 .animation-delay-1 {
   animation-delay: 100ms;
 }

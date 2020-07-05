@@ -214,7 +214,7 @@ const ProductPage = ({ data, location }) => {
                 )}
 
                 <Button
-                  className="mt-12 px-20"
+                  className="w-64 mt-12"
                   color="black"
                   onClick={() => addToCart(addableProduct, quantity)}
                   text="Add to cart"

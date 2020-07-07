@@ -22,10 +22,15 @@ const AppProvider = ({ children }) => {
     });
   }, []);
 
-  const addToCart = (productWithVariant, quantity) => {
+  const addToCart = (productWithVariant, quantity = 1) => {
     if (!productWithVariant?.variant) {
       return;
     }
+
+    delete productWithVariant.all_options;
+    delete productWithVariant.description;
+    delete productWithVariant.images;
+    delete productWithVariant.variants;
 
     let existingCartPosition = null;
 

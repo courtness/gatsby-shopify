@@ -2,11 +2,11 @@ $grid_columns: 12;
 $grid_columns_xs: 12;
 $grid_gutter: 8px;
 $grid_padding: (
-  xl: 24px,
-  lg: 24px,
-  md: 24px,
-  sm: 16px,
-  xs: 16px,
+  xl: 1rem,
+  lg: 1rem,
+  md: 1rem,
+  sm: 0.5rem,
+  xs: 0.5rem,
 );
 
 .grid {
@@ -90,12 +90,6 @@ $grid_padding: (
   }
 }
 
-.no-margin--legacy {
-  @include ms-ie {
-    margin-left: 0 !important;
-  }
-}
-
 @include generate-classes($grid_columns);
 
 @include xl {
@@ -120,4 +114,74 @@ $grid_padding: (
 
 @function grid-end($count) {
   @return calc((100vw / #{$grid_columns}) * #{$count});
+}
+
+//
+
+.offgrid-left {
+  @include lg {
+    width: calc(100% + #{map-get($grid_padding, "lg")});
+    margin-left: 0 - map-get($grid_padding, "lg");
+  }
+
+  @include md {
+    width: calc(100% + #{map-get($grid_padding, "md")});
+    margin-left: 0 - map-get($grid_padding, "md");
+  }
+
+  @include sm {
+    width: calc(100% + #{map-get($grid_padding, "sm")});
+    margin-left: 0 - map-get($grid_padding, "sm");
+  }
+
+  @include xs {
+    width: calc(100% + #{map-get($grid_padding, "xs")});
+    margin-left: 0 - map-get($grid_padding, "xs");
+  }
+
+  margin-left: 0 - map-get($grid_padding, "xl");
+
+  &--no-touch {
+    @include sm {
+      width: 100%;
+      margin-left: auto;
+    }
+  }
+}
+
+.offgrid-right {
+  @include lg {
+    width: calc(100% + #{map-get($grid_padding, "lg")});
+    margin-right: 0 - map-get($grid_padding, "lg");
+  }
+
+  @include md {
+    width: calc(100% + #{map-get($grid_padding, "md")});
+    margin-right: 0 - map-get($grid_padding, "md");
+  }
+
+  @include sm {
+    width: calc(100% + #{map-get($grid_padding, "sm")});
+    margin-right: 0 - map-get($grid_padding, "sm");
+  }
+
+  @include xs {
+    width: calc(100% + #{map-get($grid_padding, "xs")});
+    margin-right: 0 - map-get($grid_padding, "xs");
+  }
+
+  margin-right: 0 - map-get($grid_padding, "xl");
+
+  &--no-touch {
+    @include sm {
+      width: 100%;
+      margin-right: auto;
+    }
+  }
+}
+
+.no-margin--legacy {
+  @include ms-ie {
+    margin-left: 0 !important;
+  }
 }

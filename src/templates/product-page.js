@@ -13,6 +13,7 @@ import ProductGrid from "~components/ProductGrid";
 import Newsletter from "~components/Newsletter";
 import SEO from "~components/SEO";
 import Arrow from "~components/svg/Arrow";
+import { pushProductEvent } from "~utils/analytics";
 import {
   getCheckoutIdByVariantTitle,
   getProductByHandle,
@@ -22,15 +23,19 @@ import {
 
 const ProductPage = ({ data, location }) => {
   const { addToCart } = useContext(AppContext);
-  const [quantity, setQuantity] = useState(1);
-  const [addableProduct, setAddableProduct] = useState({});
-  const [selectedOptions, setSelectedOptions] = useState({});
 
   const { allShopifyAdminProduct, markdownRemark } = data;
   const { frontmatter } = markdownRemark;
   const products = parseProducts(data);
   const product = getProductByHandle(frontmatter.shopifyHandle, products);
   const options = getSelectableOptions(product);
+
+  const [addableProduct, setAddableProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [selectedOptions, setSelectedOptions] = useState({});
+
+  //
+
   const selectNewOption = (key, value) => {
     setSelectedOptions({
       ...selectedOptions,
@@ -42,6 +47,7 @@ const ProductPage = ({ data, location }) => {
     if (!product) {
       return;
     }
+
     const productClone = JSON.parse(JSON.stringify(product));
 
     productClone.checkoutId = getCheckoutIdByVariantTitle(
@@ -66,13 +72,15 @@ const ProductPage = ({ data, location }) => {
     );
 
     const defaultVariant = parsedProduct.variants[0];
-
-    parsedProduct.variant = defaultVariant;
+    const defaultSelectedOptions = {};
 
     defaultVariant.selectedOptions.forEach(option => {
-      selectNewOption(option.name, option.value);
+      defaultSelectedOptions[option.name] = option.value;
     });
+    parsedProduct.variant = defaultVariant;
 
+    pushProductEvent(parsedProduct, `productView`);
+    setSelectedOptions(defaultSelectedOptions);
     setAddableProduct(parsedProduct);
   }, []);
 
@@ -302,9 +310,9 @@ export const query = graphql`
     }
     shopifyProduct(handle: { eq: $handle }) {
       id
+      handle
       title
       description
-      handle
       images {
         originalSrc
       }
@@ -312,6 +320,7 @@ export const query = graphql`
       vendor
       variants {
         id
+        sku
         title
         image {
           originalSrc
@@ -321,7 +330,6 @@ export const query = graphql`
           name
           value
         }
-        sku
       }
     }
     allShopifyProduct {
@@ -336,6 +344,7 @@ export const query = graphql`
           }
           variants {
             id
+            sku
             title
             image {
               originalSrc
@@ -345,7 +354,6 @@ export const query = graphql`
               name
               value
             }
-            sku
           }
         }
       }

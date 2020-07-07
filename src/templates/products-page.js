@@ -76,6 +76,7 @@ export const query = graphql`
           vendor
           variants {
             id
+            sku
             title
             image {
               originalSrc
@@ -96,6 +97,7 @@ export const query = graphql`
             handle
             variants {
               alternative_id
+              title
             }
           }
         }

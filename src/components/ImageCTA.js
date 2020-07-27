@@ -6,7 +6,7 @@ import Button from "~components/Button";
 
 import wireframe from "~assets/images/wireframe.png";
 
-const ImageCTA = ({ align, content, grid, heading, image, subheading }) => {
+const ImageCTA = ({ align, className, grid, heading, image, subheading }) => {
   const { device } = useContext(DocumentContext);
 
   const ctaJSX = (
@@ -21,7 +21,7 @@ const ImageCTA = ({ align, content, grid, heading, image, subheading }) => {
   );
 
   return (
-    <section className="w-full relative bg-purple text-white">
+    <section className={`${className} w-full relative`}>
       {(grid && (
         <article className="grid">
           {((device && device === `mobile`) || align === `left`) && (
@@ -81,7 +81,7 @@ const ImageCTA = ({ align, content, grid, heading, image, subheading }) => {
 
 ImageCTA.defaultProps = {
   align: `left`,
-  content: ``,
+  className: ``,
   grid: false,
   heading: ``,
   image: null,
@@ -90,7 +90,7 @@ ImageCTA.defaultProps = {
 
 ImageCTA.propTypes = {
   align: PropTypes.string,
-  content: PropTypes.string,
+  className: PropTypes.string,
   grid: PropTypes.bool,
   heading: PropTypes.string,
   image: PropTypes.shape({}),

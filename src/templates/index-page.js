@@ -52,7 +52,7 @@ const IndexPage = ({ data, location }) => {
           </article>
 
           <article className="grid-end-6">
-            <h4 className="mb-3 f5">KEY MESSAGING 1</h4>
+            <h4 className="mb-3 f5">KEY MESSAGING 2</h4>
             <p className="b1">
               Just like your business, we see brands as a constant work in
               progress. Always testing. Always building. Always evolving. Always

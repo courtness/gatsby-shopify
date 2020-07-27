@@ -22,6 +22,11 @@
   transform: scaleX(-1);
 }
 
+.unbound {
+  max-width: none !important;
+  max-height: none !important;
+}
+
 .sixteen-by-nine {
   height: 56.25vw;
 }

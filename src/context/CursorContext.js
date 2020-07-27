@@ -16,10 +16,10 @@ const CursorProvider = ({ children }) => {
   //
 
   const handleMousemove = e => {
-    setCursorCenterDeltaX(-(0.5 - e.pageX / windowWidth));
+    setCursorCenterDeltaX(-(0.5 - e.pageX / windowWidth)); // TODO : fix
     setCursorCenterDeltaY(
       -(0.5 - (e.pageY - window.pageYOffset) / windowHeight)
-    );
+    ); // TODO : fix
     setCursorPositionX(e.pageX);
     setCursorPositionY(e.pageY - window.pageYOffset);
   };

@@ -29,11 +29,11 @@ function trackingPlugins() {
     });
   }
 
-  if (process.env.GATSBY_GTAG_ID) {
+  if (process.env.GATSBY_GTM_ID) {
     plugins.push({
       resolve: `gatsby-plugin-google-tagmanager`,
       options: {
-        id: process.env.GATSBY_GTAG_ID,
+        id: process.env.GATSBY_GTM_ID,
         includeInDevelopment: true,
         defaultDataLayer: {
           platform: `gatsby`

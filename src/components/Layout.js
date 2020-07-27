@@ -9,7 +9,7 @@ const Layout = ({ children, className, header }) => {
     if (header !== headerStyle) {
       setHeaderStyle(header);
     }
-  }, header);
+  }, [header]);
 
   return (
     <>

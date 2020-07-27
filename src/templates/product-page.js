@@ -15,14 +15,23 @@ import SEO from "~components/SEO";
 import Arrow from "~components/svg/Arrow";
 import { pushProductEvent } from "~utils/analytics";
 import {
-  getCheckoutIdByVariantTitle,
+  getPriceByCurrency,
+  getInventoryIdByVariantTitle,
+  getInventoryLevelsByIds,
+  getOtherProducts,
   getProductByHandle,
   getSelectableOptions,
   parseProducts
 } from "~utils/shopify";
 
 const ProductPage = ({ data, location }) => {
-  const { addToCart } = useContext(AppContext);
+  const {
+    addToCart,
+    activeCurrency,
+    activeCurrencySymbol,
+    rendered,
+    skuPreselect
+  } = useContext(AppContext);
 
   const { allShopifyAdminProduct, markdownRemark } = data;
   const { frontmatter } = markdownRemark;
@@ -30,7 +39,10 @@ const ProductPage = ({ data, location }) => {
   const product = getProductByHandle(frontmatter.shopifyHandle, products);
   const options = getSelectableOptions(product);
 
+  const [activePrice, setActivePrice] = useState(product?.variants?.[0].price);
   const [addableProduct, setAddableProduct] = useState({});
+  const [inventoryLoaded, setInventoryLoaded] = useState(false);
+  const [outOfStockVariants, setOutOfStockVariants] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState({});
 
@@ -43,18 +55,12 @@ const ProductPage = ({ data, location }) => {
     });
   };
 
-  const setCheckoutId = variant => {
+  const setPurchaseVariant = variant => {
     if (!product) {
       return;
     }
 
     const productClone = JSON.parse(JSON.stringify(product));
-
-    productClone.checkoutId = getCheckoutIdByVariantTitle(
-      allShopifyAdminProduct.edges,
-      productClone.handle,
-      variant.title
-    );
 
     productClone.variant = variant;
 
@@ -93,7 +99,79 @@ const ProductPage = ({ data, location }) => {
       return;
     }
 
-    setCheckoutId(product.variant);
+    let inventoryIds = ``;
+
+    product.variants.forEach((variant, variantIndex) => {
+      const inventoryId = getInventoryIdByVariantTitle(
+        allShopifyAdminProduct.edges,
+        product.handle,
+        variant.title
+      );
+
+      if (!inventoryId) {
+        return;
+      }
+
+      variant.inventoryId = inventoryId;
+
+      if (variantIndex === 0) {
+        inventoryIds = inventoryId;
+      } else {
+        inventoryIds = `${inventoryIds},${inventoryId}`;
+      }
+    });
+
+    //
+
+    if (window.location.href.includes(`localhost`)) {
+      setInventoryLoaded(true);
+      setOutOfStockVariants([]);
+    } else {
+      getInventoryLevelsByIds(inventoryIds)
+        .then(response => {
+          response
+            .json()
+            .then(inventory => {
+              setInventoryLoaded(true);
+
+              if (!inventory?.inventory_levels?.[0]) {
+                return;
+              }
+
+              const unavailableVariantIds = [];
+
+              inventory.inventory_levels.forEach(inventoryLevel => {
+                if (typeof inventoryLevel.available === `undefined`) {
+                  return;
+                }
+
+                if (inventoryLevel.available <= 0) {
+                  product.variants.forEach(variant => {
+                    if (
+                      variant.inventoryId === inventoryLevel.inventory_item_id
+                    ) {
+                      unavailableVariantIds.push(variant.id);
+                    }
+                  });
+                }
+              });
+
+              setOutOfStockVariants(unavailableVariantIds);
+            })
+            .catch(error => {
+              fancyError(
+                `Error caught reading product inventory JSON: ${error.message}`
+              );
+            });
+        })
+        .catch(error => {
+          fancyError(
+            `Error caught reading inventory from API: ${error.message}`
+          );
+        });
+    }
+
+    setPurchaseVariant(product.variant);
   }, [product]);
 
   //----------------------------------------------------------------------------
@@ -138,22 +216,9 @@ const ProductPage = ({ data, location }) => {
       }
     });
 
-    if (!matchedVariant) {
-      let fallbackVariant;
-      let maxMatchedOptionScore = -1;
-
-      product.variants.forEach(variant => {
-        if (variant.matchedOptionScore > maxMatchedOptionScore) {
-          maxMatchedOptionScore = variant.matchedOptionScore;
-          fallbackVariant = variant;
-        }
-      });
-
-      matchedVariant = fallbackVariant;
-    }
-
     if (matchedVariant) {
-      setCheckoutId(matchedVariant);
+      setPurchaseVariant(matchedVariant);
+      setActivePrice(getPriceByCurrency(matchedVariant, activeCurrency));
     }
   }, [selectedOptions]);
 
@@ -240,6 +305,7 @@ const ProductPage = ({ data, location }) => {
                   alt={product.handle}
                 />
               </figure>
+
               <figure className="square overflow-hidden border xs:mb-4">
                 <img
                   className="w-full absolute transform-center"
@@ -247,6 +313,7 @@ const ProductPage = ({ data, location }) => {
                   alt={product.handle}
                 />
               </figure>
+
               <figure className="square overflow-hidden border xs:mb-4">
                 <img
                   className="w-full absolute transform-center"
@@ -260,7 +327,7 @@ const ProductPage = ({ data, location }) => {
 
         <ProductGrid heading="Related Products" products={products} />
 
-        <BlogCTA content="blogs are still good right" />
+        <BlogCTA content="Our story" />
 
         <DummyImage />
 

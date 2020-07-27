@@ -1,7 +1,166 @@
 /* eslint-disable import/prefer-default-export */
 // import React from "react";
 
-import { shuffleArray } from "~utils/helpers";
+import { fancyWarning, shuffleArray } from "~utils/helpers";
+
+//------------------------------------------------------------------------------
+//
+// graphql
+
+export async function getCheckoutURL(cart, currencyCode) {
+  // TODO : functions URL helper
+  let url = `${process.env.GATSBY_NETLIFY_FUNCTIONS}/shopify-storefront-graphql`;
+
+  if (
+    process.env.GATSBY_REGION_CODE &&
+    process.env.GATSBY_REGION_CODE !== `` &&
+    process.env.GATSBY_REGION_CODE.toLowerCase() !== `us`
+  ) {
+    url = `${
+      process.env.GATSBY_NETLIFY_FUNCTIONS
+    }/shopify-storefront-graphql-${process.env.GATSBY_REGION_CODE.toLowerCase()}`;
+  }
+
+  let lineItemsString = `[`;
+
+  cart.forEach((cartItem, cartItemIndex) => {
+    let prefix = ``;
+
+    if (cartItemIndex !== 0) {
+      prefix = `, `;
+    }
+
+    lineItemsString += `${prefix}{variantId: "${cartItem.variantId.replace(
+      `Shopify__ProductVariant__`,
+      ``
+    )}", quantity: ${cartItem.quantity}}`;
+  });
+
+  lineItemsString += `]`;
+
+  const query = `
+    mutation {
+      checkoutCreate(
+        input: {
+          lineItems: ${lineItemsString},
+          presentmentCurrencyCode: ${currencyCode}
+        }
+      ) {
+        checkout {
+          id
+          webUrl
+        }
+      }
+    }
+  `;
+
+  const response = await fetch(url, {
+    body: JSON.stringify(query),
+    headers: new Headers({
+      "Content-Type": `application/json`
+    }),
+    method: `POST`
+  });
+
+  return response;
+}
+
+//------------------------------------------------------------------------------
+//
+// inventory
+
+export function getInventoryIdByVariantTitle(
+  adminProducts,
+  handle,
+  variantTitle
+) {
+  let id;
+
+  adminProducts.forEach(({ node }) => {
+    if (id || !node?.products?.[0]) {
+      return;
+    }
+
+    node.products.forEach(product => {
+      if (id || product.handle !== handle || !product?.variants?.[0]) {
+        return;
+      }
+
+      product.variants.forEach(variant => {
+        if (id) {
+          return;
+        }
+
+        if (variant.title === variantTitle) {
+          id = variant.inventory_item_id;
+        }
+      });
+    });
+  });
+
+  return id;
+}
+
+export async function getInventoryLevelsByIds(ids) {
+  // TODO : functions URL helper
+  let url = `${process.env.GATSBY_NETLIFY_FUNCTIONS}/get-shopify-inventory`;
+
+  if (
+    process.env.GATSBY_REGION_CODE &&
+    process.env.GATSBY_REGION_CODE !== `` &&
+    process.env.GATSBY_REGION_CODE.toLowerCase() !== `us`
+  ) {
+    url = `${
+      process.env.GATSBY_NETLIFY_FUNCTIONS
+    }/get-shopify-inventory-${process.env.GATSBY_REGION_CODE.toLowerCase()}`;
+  }
+
+  const response = await fetch(url, {
+    body: JSON.stringify({
+      ids
+    }),
+    headers: new Headers({
+      "Content-Type": `application/json`
+    }),
+    method: `POST`
+  });
+
+  return response;
+}
+
+//------------------------------------------------------------------------------
+//
+// price
+
+export function getPriceByCurrency(variant, currencyCode) {
+  let price;
+
+  if (!variant?.presentmentPrices?.edges?.[0]) {
+    fancyWarning(`Presentment prices not found`);
+
+    ({ price } = variant);
+  } else {
+    variant.presentmentPrices.edges.forEach(({ node }) => {
+      if (price) {
+        return;
+      }
+
+      if (node.price.currencyCode === currencyCode) {
+        price = node.price.amount;
+      }
+    });
+  }
+
+  if (currencyCode === `JPY`) {
+    return parseInt(price);
+  }
+
+  return parseFloat(price).toFixed(2);
+}
+
+//------------------------------------------------------------------------------
+//
+// products
 
 export function parseProducts(data) {
   if (!data || !data.allShopifyProduct || !data.allShopifyProduct.edges) {
@@ -43,38 +202,6 @@ export function parseProducts(data) {
   }
 
   return products;
-}
-
-export function getCheckoutIdByVariantTitle(
-  adminProducts,
-  handle,
-  variantTitle
-) {
-  let id;
-
-  adminProducts.forEach(({ node }) => {
-    if (id || !node?.products?.[0]) {
-      return;
-    }
-
-    node.products.forEach(product => {
-      if (id || product.handle !== handle || !product?.variants?.[0]) {
-        return;
-      }
-
-      product.variants.forEach(variant => {
-        if (id) {
-          return;
-        }
-
-        if (variant.title === variantTitle) {
-          id = variant.alternative_id;
-        }
-      });
-    });
-  });
-
-  return id;
 }
 
 export function filterProductsByColourVariants(data) {
@@ -130,7 +257,7 @@ export function filterProductsByColourVariants(data) {
             });
 
             if (matchedVariantImage) {
-              productClone.variant_image = matchedVariantImage;
+              productClone.variant_image = matchedVariantImage.image;
             }
           }
 

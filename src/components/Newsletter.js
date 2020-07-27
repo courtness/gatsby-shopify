@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Parallaxer from "~components/Parallaxer";
 import { validateEmail } from "~utils/helpers";
-
-import doge from "~assets/images/doge.jpg";
 
 const Newsletter = () => {
   const [formData, setFormData] = useState({});
@@ -59,48 +56,47 @@ const Newsletter = () => {
   }
 
   return (
-    <section className="w-full relative pt-8 pb-12 overflow-hidden bg-black text-white">
-      <div className="w-full h-full absolute top-0 right-0 bottom-0 left-0">
-        <img
-          className="w-full xs:w-auto xs:h-full absolute opacity-50 transform-center"
-          src={doge}
-          alt="doge"
-        />
-      </div>
-
+    <section className="w-full relative pt-16 pb-20 overflow-hidden bg-black text-white">
       <form className="grid" onSubmit={onSubmit}>
-        <h2 className="grid-end-12 mb-4 f4">Newsletter</h2>
-        <h2 className="grid-end-12 mb-8 b1">Sign up, or whatever.</h2>
+        <div className="grid-end-5 grid-start-2">
+          <h2 className="f3">Sign up to our newsletter</h2>
+          <h2 className="mt-6 b1">
+            We promise not to overload you with daily emails about trends and
+            other boring stuff.
+          </h2>
+        </div>
 
-        <input
-          className="grid-end-3 xs:grid-end-12 h-12 relative block px-2 border-black bg-white b1 text-black"
-          onChange={e => {
-            setInteracted(true);
-            setFormData({ ...formData, name: e.target.value });
-          }}
-          placeholder="Name"
-          type="text"
-        />
+        <div className="grid-end-5 xs:grid-end-12 flex flex-col">
+          <input
+            className="w-full h-12 relative block mt-2 px-2 border-black bg-white b1 text-black"
+            onChange={e => {
+              setInteracted(true);
+              setFormData({ ...formData, name: e.target.value });
+            }}
+            placeholder="Name"
+            type="text"
+          />
 
-        <input
-          className="grid-end-3 xs:grid-end-12 h-12 relative block px-2 border-black bg-white b1 text-black"
-          onChange={e => {
-            setInteracted(true);
-            setFormData({ ...formData, email: e.target.value });
-          }}
-          placeholder="Email address"
-          type="email"
-        />
+          <input
+            className="w-full h-12 relative block mt-2 px-2 border-black bg-white b1 text-black"
+            onChange={e => {
+              setInteracted(true);
+              setFormData({ ...formData, email: e.target.value });
+            }}
+            placeholder="Email address"
+            type="email"
+          />
 
-        <input
-          className={`${
-            valid && !submitting && !submitted
-              ? ``
-              : `opacity-50 pointer-events-none`
-          } grid-end-2 xs:grid-end-12 grid-start-1 button button--white relative mt-4 xs:mt-1 py-4 cursor-pointer caption uppercase`}
-          type="submit"
-          value={buttonText}
-        />
+          <input
+            className={`${
+              valid && !submitting && !submitted
+                ? ``
+                : `opacity-50 pointer-events-none`
+            } button button--white w-48 self-end relative mt-2 xs:mt-1 py-4 cursor-pointer caption uppercase`}
+            type="submit"
+            value={buttonText}
+          />
+        </div>
       </form>
     </section>
   );

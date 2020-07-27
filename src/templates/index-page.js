@@ -30,22 +30,49 @@ const IndexPage = ({ data, location }) => {
       <Layout className="index-page w-full relative">
         <DummyImage />
 
-        <section className="w-full relative flex items-center justify-center pt-32 pb-32">
-          <article className="text-center">
-            <h2 className="f2">such brand</h2>
-            <p className="mt-12 f5">so content, much words.</p>
+        <section className="grid pt-12 pb-24">
+          <header className="grid-end-10">
+            <h2 className="f2">A branded headline with on-point messaging</h2>
+            <p className="mt-12 mb-16 f5">
+              Digital branding is about finding the balance between
+              forward-thinking and real-time reaction.
+            </p>
+          </header>
+
+          <article className="grid-end-6">
+            <h4 className="mb-3 f5">KEY MESSAGING 1</h4>
+            <p className="b1">
+              Just like your business, we see brands as a constant work in
+              progress. Always testing. Always building. Always evolving. Always
+              Beta. Ours is a constant, iterative and collaborative process of
+              research, creation, building, testing, and improving. Investing
+              enough time, energy, love and money to make sure you’re ready to
+              grow.
+            </p>
+          </article>
+
+          <article className="grid-end-6">
+            <h4 className="mb-3 f5">KEY MESSAGING 1</h4>
+            <p className="b1">
+              Just like your business, we see brands as a constant work in
+              progress. Always testing. Always building. Always evolving. Always
+              Beta. Ours is a constant, iterative and collaborative process of
+              research, creation, building, testing, and improving. Investing
+              enough time, energy, love and money to make sure you’re ready to
+              grow.
+            </p>
           </article>
         </section>
 
-        <ImageCTA content="very image" />
-        <ImageCTA align="right" content="what a moment" />
-        <ImageCTA content="wow still going" />
+        <ImageCTA heading="Product Category" subheading="Description copy" />
+        <ImageCTA
+          align="right"
+          heading="Product Category"
+          subheading="Description copy"
+        />
+        <ImageCTA heading="Product Category" subheading="Description copy" />
 
         <ProductGrid max={3} products={products} />
-
-        <BlogCTA content="blogs are still good right" />
-
-        <DummyImage />
 
         <Newsletter />
       </Layout>

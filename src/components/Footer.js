@@ -18,7 +18,7 @@ const Footer = () => (
       </ul>
 
       <div className="grid-end-3 xs:grid-end-6 relative xs:mt-12">
-        <h4 className="mb-4 b3">Shop</h4>
+        <h4 className="mb-4 b2">Shop</h4>
 
         <ul>
           <li className="caption uppercase">
@@ -39,7 +39,7 @@ const Footer = () => (
       </div>
 
       <div className="grid-end-3 xs:grid-end-6 relative xs:mt-12">
-        <h4 className="mb-4 b3">Story</h4>
+        <h4 className="mb-4 b2">Story</h4>
 
         <ul>
           <li className="caption uppercase">
@@ -57,7 +57,7 @@ const Footer = () => (
       </div>
 
       <div className="grid-end-3 xs:grid-end-12 relative xs:mt-6">
-        <h4 className="mb-4 b3">Help</h4>
+        <h4 className="mb-4 b2">Help</h4>
 
         <ul className="xs:flex flex-wrap">
           <li className="xs:w-1/2 caption uppercase">

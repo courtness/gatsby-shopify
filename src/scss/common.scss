@@ -48,6 +48,13 @@
   overflow: hidden;
 }
 
+.letterbox {
+  width: 100%;
+  position: relative;
+  padding-bottom: 66%;
+  overflow: hidden;
+}
+
 .border {
   &-black {
     border: 1px solid theme("colors.black");

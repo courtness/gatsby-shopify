@@ -37,7 +37,7 @@ const Header = () => {
           </button>
 
           <Link to="/" className="block text-black">
-            <h2 className="b1 italic">logo™</h2>
+            <h2 className="b1">Shop Name</h2>
           </Link>
 
           <button type="button" onClick={toggleCart}>

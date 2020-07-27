@@ -1,6 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 
-export function pushProductEvent(product, event, quantity = 1) {
+export function pushProductEvent(
+  product,
+  currencyCode = `USD`,
+  event,
+  quantity = 1
+) {
   if (
     typeof window === `undefined` ||
     !window ||
@@ -9,6 +14,16 @@ export function pushProductEvent(product, event, quantity = 1) {
   ) {
     return;
   }
+
+  let location = `love-money-store`;
+
+  if (process.env.GATSBY_SHOPIFY_STORE) {
+    location = process.env.GATSBY_SHOPIFY_STORE;
+  }
+
+  const ecommerce = {
+    currencyCode
+  };
 
   const products = [
     {
@@ -20,13 +35,10 @@ export function pushProductEvent(product, event, quantity = 1) {
     }
   ];
 
-  const ecommerce = {
-    currencyCode: `AUD`
-  };
-
   switch (event) {
     case `addToCart`:
       ecommerce.add = {
+        location,
         products
       };
 
@@ -34,6 +46,7 @@ export function pushProductEvent(product, event, quantity = 1) {
 
     case `productView`:
       ecommerce.detail = {
+        location,
         products
       };
 
@@ -41,6 +54,7 @@ export function pushProductEvent(product, event, quantity = 1) {
 
     case `removeFromCart`:
       ecommerce.remove = {
+        location,
         products
       };
 
@@ -54,8 +68,6 @@ export function pushProductEvent(product, event, quantity = 1) {
     event,
     ecommerce
   };
-
-  // console.log(`Sending eventData: `, eventData);
 
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(eventData);

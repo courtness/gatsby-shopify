@@ -2,6 +2,7 @@ module.exports = {
   theme: {
     colors: {
       white: `#ffffff`,
+      purple: `#6045E5`,
       black: `#000000`
     },
     screens: {

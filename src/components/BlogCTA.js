@@ -28,7 +28,7 @@ const BlogCTA = ({ align, content, image }) => {
           <h4 className="f2 text-center">{content}</h4>
 
           <Link to="/blog">
-            <Button color="black" className="mt-12 px-24" text="View Blog" />
+            <Button color="black" className="w-48 mt-12" text="View Blog" />
           </Link>
         </div>
 

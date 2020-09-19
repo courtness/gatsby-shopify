@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 const Button = ({ className, color, onClick, text, transparent }) => (
   <motion.div
-    className={`${className}`}
+    className={`${className} inline-block`}
     whileHover={{
       scale: 1.025
     }}
@@ -14,7 +14,7 @@ const Button = ({ className, color, onClick, text, transparent }) => (
       type="button"
       className={`button button--${color} ${
         transparent ? `button--transparent` : ``
-      } ${className} relative py-4 caption uppercase`}
+      } ${className} relative block py-4 caption uppercase`}
       onClick={onClick}
     >
       {text}

@@ -105,6 +105,13 @@ export const query = graphql`
           frontmatter {
             title
             shopifyHandle
+            image {
+              childImageSharp {
+                fluid(maxWidth: 1280, quality: 75) {
+                  ...GatsbyImageSharpFluid_withWebp_noBase64
+                }
+              }
+            }
           }
         }
       }

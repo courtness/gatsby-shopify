@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { DocumentContext } from "~context/DocumentContext";
 
-const AppearOnScroll = ({ children, once }) => {
+const AppearOnScroll = ({ children, delay, once }) => {
   const documentContext = useContext(DocumentContext);
   const containerRef = useRef();
   const [visible, setVisible] = useState(false);
@@ -31,7 +31,7 @@ const AppearOnScroll = ({ children, once }) => {
       ref={containerRef}
       className={`${
         visible ? `animation-appear` : `invisible`
-      } animation-delay-2`}
+      } animation-delay-${delay}`}
     >
       {computedChildren}
     </div>
@@ -39,11 +39,13 @@ const AppearOnScroll = ({ children, once }) => {
 };
 
 AppearOnScroll.defaultProps = {
+  delay: 2,
   once: false
 };
 
 AppearOnScroll.propTypes = {
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
+  delay: PropTypes.number,
   once: PropTypes.bool
 };
 

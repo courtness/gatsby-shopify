@@ -13,7 +13,6 @@
     "build:lambda": "netlify-lambda build src/lambda"
   },
   "dependencies": {
-    "@glidejs/glide": "^3.4.1",
     "@reach/router": "^1.2.1",
     "autoprefixer": "^9.7.1",
     "axios": "^0.19.2",

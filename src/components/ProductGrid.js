@@ -1,45 +1,60 @@
 import React from "react";
 import { Link } from "gatsby";
+import Img from "gatsby-image";
 import PropTypes from "prop-types";
 
-const ProductGrid = ({ heading, max, products, subheading }) => {
-  let renderedProducts = products;
+const ProductGrid = ({ max, products }) => {
+  let renderedProducts = JSON.parse(JSON.stringify(products));
 
   if (max) {
     renderedProducts = products.slice(0, max);
   }
 
   return (
-    <section className="w-full relative pt-24 pb-24">
-      <header className="grid">
-        <h3 className="grid-end-12 f5">{heading}</h3>
-        <h3 className="grid-end-12 mt-1 mb-6 b1">{subheading}</h3>
-      </header>
-
+    <section className="product-grid w-full relative pt-12 pb-12">
       {renderedProducts?.[0] && (
         <ul className="grid">
-          {renderedProducts.map(product => (
-            <li
-              key={product.handle}
-              className="grid-end-4 xs:grid-end-12 mb-8"
-              style={{ border: `1px solid rgba(0, 0, 0, 0.25)` }}
-            >
-              <Link to={product.slug}>
-                <figure className="square overflow-hidden">
-                  <img
-                    className="w-full absolute transform-center"
-                    src={product.images[0].originalSrc}
-                    alt={product.handle}
-                  />
-                </figure>
+          {renderedProducts.map(product => {
+            let image = product.images[0].originalSrc;
 
-                <div className="p-3">
-                  <h2 className="f5">{product.frontmatter.title}</h2>
-                  <h2 className="f5">${product.variants[0].price}</h2>
-                </div>
-              </Link>
-            </li>
-          ))}
+            if (product?.frontmatter?.image.childImageSharp) {
+              image = product.frontmatter.image.childImageSharp;
+            }
+
+            return (
+              <li
+                key={product.handle}
+                className="grid-end-4 xs:grid-end-12 mb-8"
+              >
+                <Link to={product.slug}>
+                  <div className="square overflow-hidden">
+                    {(image?.fluid && (
+                      <figure className="w-full absolute transform-center">
+                        <Img
+                          className="w-full relative block"
+                          fluid={image.fluid}
+                          alt={product.frontmatter.title}
+                        />
+                      </figure>
+                    )) || (
+                      <figure className="w-full absolute transform-center">
+                        <img
+                          className="w-full relative block"
+                          src={product.images[0].originalSrc}
+                          alt={product.handle}
+                        />
+                      </figure>
+                    )}
+                  </div>
+
+                  <div className="p-3">
+                    <h2 className="f5">{product.frontmatter.title}</h2>
+                    <h2 className="f5">${product.variants[0].price}</h2>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
@@ -47,16 +62,12 @@ const ProductGrid = ({ heading, max, products, subheading }) => {
 };
 
 ProductGrid.defaultProps = {
-  heading: `Product Category`,
-  max: null,
-  subheading: `Introductory description of the product category`
+  max: null
 };
 
 ProductGrid.propTypes = {
-  heading: PropTypes.string,
   products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  max: PropTypes.number,
-  subheading: PropTypes.string
+  max: PropTypes.number
 };
 
 export default ProductGrid;

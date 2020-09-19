@@ -54,14 +54,7 @@ strong,
 //
 
 @mixin f1 {
-  @include sm {
-    font-size: 64px;
-    line-height: 70px;
-  }
-
   font-family: Helvetica, Arial, sans-serif;
-  font-weight: 500;
-
   font-size: 90px;
   line-height: 100px;
   letter-spacing: -0.02em;
@@ -74,14 +67,7 @@ strong,
 //
 
 @mixin f2 {
-  @include sm {
-    font-size: 50px;
-    line-height: 50px;
-  }
-
   font-family: Helvetica, Arial, sans-serif;
-  font-weight: 500;
-
   font-size: 70px;
   line-height: 72px;
   letter-spacing: -0.02em;
@@ -94,14 +80,7 @@ strong,
 //
 
 @mixin f3 {
-  @include sm {
-    font-size: 32px;
-    line-height: 34px;
-  }
-
   font-family: Helvetica, Arial, sans-serif;
-  font-weight: 500;
-
   font-size: 44px;
   line-height: 48px;
   letter-spacing: -0.02em;
@@ -127,14 +106,7 @@ strong,
 //
 
 @mixin f5 {
-  @include sm {
-    font-size: 20px;
-    line-height: 26px;
-  }
-
   font-family: Helvetica, Arial, sans-serif;
-  font-weight: 500;
-
   font-size: 24px;
   line-height: 32px;
   letter-spacing: -0.01em;
@@ -148,7 +120,6 @@ strong,
 
 @mixin b1 {
   font-family: Helvetica, Arial, sans-serif;
-
   font-size: 16px;
   line-height: 24px;
 }
@@ -161,7 +132,6 @@ strong,
 
 @mixin b2 {
   font-family: Helvetica, Arial, sans-serif;
-
   font-size: 14px;
   line-height: 18px;
 }
@@ -174,7 +144,6 @@ strong,
 
 @mixin b3 {
   font-family: Times, "Times New Roman", serif;
-
   font-size: 16px;
   line-height: 24px;
 }
@@ -187,7 +156,6 @@ strong,
 
 @mixin caption {
   font-family: Helvetica, Arial, sans-serif;
-
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.15em;
@@ -195,17 +163,4 @@ strong,
 
 .caption {
   @include caption;
-}
-
-//
-
-@mixin icon-caption {
-  font-family: Helvetica, Arial, sans-serif;
-
-  font-size: 6px;
-  line-height: 8px;
-}
-
-.icon-caption {
-  @include icon-caption;
 }

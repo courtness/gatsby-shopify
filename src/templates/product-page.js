@@ -23,6 +23,7 @@ import {
   getSelectableOptions,
   parseProducts
 } from "~utils/shopify";
+import { fancyError } from "~utils/helpers";
 
 const ProductPage = ({ data, location }) => {
   const {
@@ -250,9 +251,11 @@ const ProductPage = ({ data, location }) => {
 
                 <h3 className="w-full mt-2 f3">${product.variants[0].price}</h3>
 
-                <p className="w-full mt-8 b1">
-                  {product.description.substring(0, 100)}...
-                </p>
+                {product?.frontmatter?.description && (
+                  <p className="w-full mt-8 b1">
+                    {product.frontmatter.description}
+                  </p>
+                )}
 
                 {options && Object.keys(options).length > 0 && (
                   <ul className="w-full relative block">
@@ -370,6 +373,9 @@ export const query = graphql`
           }
           frontmatter {
             title
+            description
+            priority
+            collection
             shopifyHandle
           }
         }

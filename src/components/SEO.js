@@ -7,12 +7,15 @@ const query = graphql`
   query SEO {
     site {
       siteMetadata {
+        author
         description
+        fbAppId
+        image
         keywords
+        siteUrl
         title
         titleTemplate
         twitterUsername
-        siteUrl
       }
     }
   }
@@ -32,6 +35,7 @@ const SEO = ({
         site: {
           siteMetadata: {
             description,
+            fbAppId,
             image,
             keywords,
             siteUrl,
@@ -43,6 +47,7 @@ const SEO = ({
       }) => {
         const seo = {
           description: customDescription || description,
+          fbAppId: fbAppId !== `` ? fbAppId : null,
           keywords: customKeywords || keywords,
           image: `${siteUrl}${image}`,
           title: customTitle || title,
@@ -72,6 +77,8 @@ const SEO = ({
             {seo.image && <meta name="twitter:image" content={seo.image} />}
 
             {seo.keywords && <meta name="keywords" content={seo.keywords} />}
+
+            {fbAppId && <meta property="fb:app_id" content={fbAppId} />}
 
             {twitterUsername && (
               <meta name="twitter:creator" content={twitterUsername} />

@@ -129,7 +129,7 @@ module.exports = {
     description: ``,
     keywords: ``,
     author: `danielcourtness@gmail.com`,
-    image: `/images/share.jpg`,
+    image: `/images/site-image.svg`,
     fbAppId: ``,
     twitterUsername: `@twitter`
   },

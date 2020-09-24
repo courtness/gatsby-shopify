@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AppContext } from "~context/AppContext";
-import Geolocator from "~components/Geolocator";
+// import Geolocator from "~components/Geolocator";
 
 const Layout = ({ children, className, header }) => {
   const { headerStyle, setHeaderStyle } = useContext(AppContext);
@@ -14,7 +14,7 @@ const Layout = ({ children, className, header }) => {
 
   return (
     <>
-      <Geolocator />
+      {/* <Geolocator /> */}
 
       <main id="layout" className={`layout ${className}`}>
         {children}

@@ -68,84 +68,84 @@ const AppProvider = ({ children }) => {
     //
     // location lookup
 
-    axios
-      .get(`https://ipapi.co/json/`)
-      .then(response => {
-        const { data } = response;
+    // axios
+    //   .get(`https://ipapi.co/json/`)
+    //   .then(response => {
+    //     const { data } = response;
 
-        const continent = data.continent_code.toLowerCase();
+    //     const continent = data.continent_code.toLowerCase();
 
-        switch (process.env.GATSBY_REGION_CODE) {
-          case `au`:
-            if (
-              continent !== `an` &&
-              continent !== `as` &&
-              continent !== `oc` &&
-              !cookies?.located
-            ) {
-              // console.log(`You don't look like you're from Australia`);
-              setTimeout(() => {
-                setGeolocatorActive(true);
-              }, 2000);
-            }
+    //     switch (process.env.GATSBY_REGION_CODE) {
+    //       case `au`:
+    //         if (
+    //           continent !== `an` &&
+    //           continent !== `as` &&
+    //           continent !== `oc` &&
+    //           !cookies?.located
+    //         ) {
+    //           // console.log(`You don't look like you're from Australia`);
+    //           setTimeout(() => {
+    //             setGeolocatorActive(true);
+    //           }, 2000);
+    //         }
 
-            break;
+    //         break;
 
-          case `eu`:
-            if (continent !== `af` && continent !== `eu` && !cookies?.located) {
-              // console.log(`You don't look like you're from Europe`);
-              setTimeout(() => {
-                setGeolocatorActive(true);
-              }, 2000);
-            }
+    //       case `eu`:
+    //         if (continent !== `af` && continent !== `eu` && !cookies?.located) {
+    //           // console.log(`You don't look like you're from Europe`);
+    //           setTimeout(() => {
+    //             setGeolocatorActive(true);
+    //           }, 2000);
+    //         }
 
-            break;
+    //         break;
 
-          case `us`:
-            if (continent !== `na` && continent !== `sa` && !cookies?.located) {
-              // console.log(`You don't look like you're from America`);
-              setTimeout(() => {
-                setGeolocatorActive(true);
-              }, 2000);
-            }
+    //       case `us`:
+    //         if (continent !== `na` && continent !== `sa` && !cookies?.located) {
+    //           // console.log(`You don't look like you're from America`);
+    //           setTimeout(() => {
+    //             setGeolocatorActive(true);
+    //           }, 2000);
+    //         }
 
-            break;
+    //         break;
 
-          default:
-            break;
-        }
+    //       default:
+    //         break;
+    //     }
 
-        if (cookies?.[`${process.env.GATSBY_REGION_CODE}_currency`]) {
-          setActiveCurrency(
-            cookies?.[`${process.env.GATSBY_REGION_CODE}_currency`]
-          );
-        } else if (process.env.GATSBY_CURRENCIES) {
-          const availableCurrencies = process.env.GATSBY_CURRENCIES.split(`,`);
+    //     if (cookies?.[`${process.env.GATSBY_REGION_CODE}_currency`]) {
+    //       setActiveCurrency(
+    //         cookies?.[`${process.env.GATSBY_REGION_CODE}_currency`]
+    //       );
+    //     } else if (process.env.GATSBY_CURRENCIES) {
+    //       const availableCurrencies = process.env.GATSBY_CURRENCIES.split(`,`);
 
-          if (
-            Array.isArray(availableCurrencies) &&
-            availableCurrencies?.[0] &&
-            availableCurrencies.includes(data.currency)
-          ) {
-            setActiveCurrency(data.currency);
-          } else {
-            setDefaultCurrency();
-          }
-        } else {
-          setDefaultCurrency();
-        }
-      })
-      .catch(error => {
-        fancyWarning(error.message);
+    //       if (
+    //         Array.isArray(availableCurrencies) &&
+    //         availableCurrencies?.[0] &&
+    //         availableCurrencies.includes(data.currency)
+    //       ) {
+    //         setActiveCurrency(data.currency);
+    //       } else {
+    //         setDefaultCurrency();
+    //       }
+    //     } else {
+    //       setDefaultCurrency();
+    //     }
+    //   })
+    //   .catch(error => {
+    //     fancyWarning(error.message);
 
-        if (!cookies?.located) {
-          setTimeout(() => {
-            setGeolocatorActive(true);
-          }, 2000);
-        }
+    //     if (!cookies?.located) {
+    //       setTimeout(() => {
+    //         setGeolocatorActive(true);
+    //       }, 2000);
+    //     }
 
-        setDefaultCurrency();
-      });
+    //     setDefaultCurrency();
+    //   });
 
     //
     // [cookie] cart
@@ -200,42 +200,42 @@ const AppProvider = ({ children }) => {
     //
     // [cookie] wishlist
 
-    if (cookies?.[`${process.env.GATSBY_REGION_CODE}_wishlist`]) {
-      const parsedWishlist =
-        cookies[`${process.env.GATSBY_REGION_CODE}_wishlist`];
+    // if (cookies?.[`${process.env.GATSBY_REGION_CODE}_wishlist`]) {
+    //   const parsedWishlist =
+    //     cookies[`${process.env.GATSBY_REGION_CODE}_wishlist`];
 
-      let valid = Array.isArray(parsedWishlist);
+    //   let valid = Array.isArray(parsedWishlist);
 
-      parsedWishlist.forEach(wishlistItem => {
-        if (!valid) {
-          return;
-        }
+    //   parsedWishlist.forEach(wishlistItem => {
+    //     if (!valid) {
+    //       return;
+    //     }
 
-        if (
-          typeof wishlistItem === `undefined` ||
-          wishlistItem === null ||
-          wishlistItem === false ||
-          wishlistItem === `` ||
-          !wishlistItem?.variantId
-        ) {
-          valid = false;
-        }
-      });
+    //     if (
+    //       typeof wishlistItem === `undefined` ||
+    //       wishlistItem === null ||
+    //       wishlistItem === false ||
+    //       wishlistItem === `` ||
+    //       !wishlistItem?.variantId
+    //     ) {
+    //       valid = false;
+    //     }
+    //   });
 
-      if (!valid || process.env.GATSBY_RESET_COOKIES) {
-        fancyWarning(`Resetting wishlist data`);
-        setCookie([`${process.env.GATSBY_REGION_CODE}_wishlist`], [], {
-          path: `/`
-        });
-        setWishlist([]);
-      } else {
-        setWishlist(parsedWishlist);
-      }
-    }
+    //   if (!valid || process.env.GATSBY_RESET_COOKIES) {
+    //     fancyWarning(`Resetting wishlist data`);
+    //     setCookie([`${process.env.GATSBY_REGION_CODE}_wishlist`], [], {
+    //       path: `/`
+    //     });
+    //     setWishlist([]);
+    //   } else {
+    //     setWishlist(parsedWishlist);
+    //   }
+    // }
 
-    return globalHistory.listen(({ location }) => {
-      setPathname(location.pathname);
-    });
+    // return globalHistory.listen(({ location }) => {
+    //   setPathname(location.pathname);
+    // });
   }, []);
 
   // [cookie] acceptance
@@ -260,17 +260,17 @@ const AppProvider = ({ children }) => {
 
   // [cookie] location
 
-  useEffect(() => {
-    if (geolocatorActive) {
-      disableBodyScroll();
-    } else {
-      if (cookiesAccepted) {
-        setCookie(`located`, true, { path: `/` });
-      }
+  // useEffect(() => {
+  //   if (geolocatorActive) {
+  //     disableBodyScroll();
+  //   } else {
+  //     if (cookiesAccepted) {
+  //       setCookie(`located`, true, { path: `/` });
+  //     }
 
-      clearAllBodyScrollLocks();
-    }
-  }, [geolocatorActive]);
+  //     clearAllBodyScrollLocks();
+  //   }
+  // }, [geolocatorActive]);
 
   //
 

@@ -130,7 +130,7 @@ module.exports = {
     keywords: ``,
     author: `danielcourtness@gmail.com`,
     image: `/images/site-image.svg`,
-    fbAppId: ``,
+    fbAppId: `fbAppId`,
     twitterUsername: `@twitter`
   },
   plugins: [

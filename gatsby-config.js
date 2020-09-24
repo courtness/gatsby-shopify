@@ -125,11 +125,12 @@ module.exports = {
   siteMetadata: {
     title: `Gatsby Shopify`,
     titleTemplate: `%s - Gatsby Shopify`,
-    description: `Headless Gatsby Shopify Template`,
+    siteUrl: ``,
+    description: ``,
     keywords: ``,
     author: `danielcourtness@gmail.com`,
-    url: ``,
-    image: `/images/site-image.svg`,
+    image: `/images/share.jpg`,
+    fbAppId: ``,
     twitterUsername: `@twitter`
   },
   plugins: [

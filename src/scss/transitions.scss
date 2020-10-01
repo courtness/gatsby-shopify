@@ -214,6 +214,10 @@ $fast-transition: $fast-transition-speed $ease-out-cubic;
 
 .animation-marquee {
   animation: 6s linear marquee infinite;
+
+  &-slow {
+    animation: 20s linear marquee infinite;
+  }
 }
 
 //

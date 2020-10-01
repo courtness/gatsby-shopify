@@ -1,14 +1,28 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { DocumentContext } from "~context/DocumentContext";
 
-const AppearOnScroll = ({ children, delay, once }) => {
+const AppearOnScroll = ({ atTop, children, once, delay, slow }) => {
   const documentContext = useContext(DocumentContext);
   const containerRef = useRef();
   const [visible, setVisible] = useState(false);
-  const { windowHeight } = documentContext;
+  const { scrollTop, windowHeight } = documentContext;
 
-  if (containerRef && containerRef.current) {
+  useEffect(() => {
+    if (!atTop || !containerRef?.current || !window) {
+      return;
+    }
+
+    setTimeout(() => {
+      window.scrollTo(0, 2);
+    }, 100);
+  }, [containerRef.current]);
+
+  useEffect(() => {
+    if (!containerRef?.current) {
+      return;
+    }
+
     const { height, top } = containerRef.current.getBoundingClientRect();
 
     if (top > -height && top < windowHeight) {
@@ -18,7 +32,9 @@ const AppearOnScroll = ({ children, delay, once }) => {
     } else if (visible && !once) {
       setVisible(false);
     }
-  }
+  }, [scrollTop]);
+
+  //
 
   let computedChildren = children;
 
@@ -26,11 +42,13 @@ const AppearOnScroll = ({ children, delay, once }) => {
     computedChildren = children({ visible });
   }
 
+  //
+
   return (
     <div
       ref={containerRef}
       className={`${
-        visible ? `animation-appear` : `invisible`
+        visible ? `animation-appear${slow ? `-slow` : ``}` : `invisible`
       } animation-delay-${delay}`}
     >
       {computedChildren}
@@ -39,14 +57,18 @@ const AppearOnScroll = ({ children, delay, once }) => {
 };
 
 AppearOnScroll.defaultProps = {
+  atTop: false,
   delay: 2,
-  once: false
+  once: false,
+  slow: false
 };
 
 AppearOnScroll.propTypes = {
+  atTop: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   delay: PropTypes.number,
-  once: PropTypes.bool
+  once: PropTypes.bool,
+  slow: PropTypes.bool
 };
 
 export default AppearOnScroll;

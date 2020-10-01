@@ -1,4 +1,8 @@
+/* eslint-disable no-console */
 /* eslint-disable import/prefer-default-export */
+
+import { fancyWarning } from "~utils/helpers";
+import { getPriceByCurrency } from "~utils/shopify";
 
 export function pushProductEvent(
   product,
@@ -71,4 +75,65 @@ export function pushProductEvent(
 
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(eventData);
+}
+
+export function fbqTrackCheckout(cart, products, currency) {
+  if (
+    process.env.NODE_ENV !== `production` ||
+    typeof window === `undefined` ||
+    !window?.fbq ||
+    !cart?.[0]
+  ) {
+    fancyWarning(`fbq:warn | Required variable(s) undefined`);
+    return;
+  }
+
+  const cartIds = [];
+  let cartTotal = 0;
+
+  cart.forEach(cartItem => {
+    products.forEach(productItem => {
+      productItem.variants.forEach(productItemVariant => {
+        if (productItemVariant.id === cartItem.variantId) {
+          cartIds.push(cartItem.variantId);
+          cartTotal +=
+            getPriceByCurrency(productItemVariant, currency) *
+            cartItem.quantity;
+        }
+      });
+    });
+  });
+
+  const fbqData = {
+    content_name: `Checkout`,
+    content_category: `snippets`,
+    content_ids: cartIds,
+    value: cartTotal,
+    currency
+  };
+
+  window.fbq(`track`, `InitiateCheckout`, fbqData);
+}
+
+export function fbqTrackProduct(key, product, currency) {
+  if (
+    process.env.NODE_ENV !== `production` ||
+    typeof window === `undefined` ||
+    !window?.fbq ||
+    !product?.variant
+  ) {
+    fancyWarning(`fbq:warn | Required variable(s) undefined`);
+    return;
+  }
+
+  const fbqData = {
+    content_name: product.frontmatter.title,
+    content_category: product.frontmatter.collection,
+    content_ids: [product.variant.id],
+    content_type: `product`,
+    value: product.variant.price,
+    currency
+  };
+
+  window.fbq(`track`, key, fbqData);
 }

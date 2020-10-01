@@ -90,3 +90,37 @@
     text-decoration: underline;
   }
 }
+
+@for $i from 1 through 12 {
+  .m-v#{$i} {
+    margin: #{$i}vw;
+  }
+  .mt-v#{$i} {
+    margin-top: #{$i}vw;
+  }
+  .mr-v#{$i} {
+    margin-right: #{$i}vw;
+  }
+  .mb-v#{$i} {
+    margin-bottom: #{$i}vw;
+  }
+  .ml-v#{$i} {
+    margin-left: #{$i}vw;
+  }
+
+  .p-v#{$i} {
+    padding: #{$i}vw;
+  }
+  .pt-v#{$i} {
+    padding-top: #{$i}vw;
+  }
+  .pr-v#{$i} {
+    padding-right: #{$i}vw;
+  }
+  .pb-v#{$i} {
+    padding-bottom: #{$i}vw;
+  }
+  .pl-v#{$i} {
+    padding-left: #{$i}vw;
+  }
+}

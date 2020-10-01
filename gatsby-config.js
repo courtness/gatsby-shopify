@@ -125,12 +125,12 @@ module.exports = {
   siteMetadata: {
     title: `Gatsby Shopify`,
     titleTemplate: `%s - Gatsby Shopify`,
-    siteUrl: ``,
-    description: ``,
-    keywords: ``,
+    description: `Gatsby // Shopify Ecommerce template`,
+    keywords: `change,these,to,something,else`,
     author: `danielcourtness@gmail.com`,
-    image: `/images/site-image.svg`,
-    fbAppId: `fbAppId`,
+    image: `/images/share.svg`,
+    fbAppId: ``,
+    siteUrl: `https://borkify.netlify.app`,
     twitterUsername: `@twitter`
   },
   plugins: [

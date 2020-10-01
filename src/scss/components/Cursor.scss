@@ -1,0 +1,7 @@
+.cursor {
+  @include sm {
+    display: none;
+  }
+
+  width: 2vw;
+}

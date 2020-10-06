@@ -1,8 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 const Carousel = ({
   align,
+  autoPlay,
   className,
   dotColor,
   items,
@@ -14,14 +15,30 @@ const Carousel = ({
   const [touchMove, setTouchMove] = useState(null);
   const [touchStart, setTouchStart] = useState(null);
 
+  //
+
+  useEffect(() => {
+    if (!autoPlay || Number.isNaN(autoPlay) || autoPlay <= 0) {
+      return;
+    }
+
+    setInterval(() => {
+      setActiveCarouselIndex(oldIndex => (oldIndex + 1) % items.length);
+    }, autoPlay);
+  }, []);
+
+  //
+
   if (!items?.[0]) {
     return <Fragment key={`${keyPrefix}-stub`}></Fragment>;
   }
 
+  //
+
   return (
     <section
       key={`${keyPrefix}-container`}
-      className={`carousel ${className || `w-full relative`}`}
+      className={`carousel ${className || `w-full relative`} overflow-x-hidden`}
     >
       <ul
         className="carousel__slides w-full relative flex items-stretch justify-start overflow-visible"
@@ -71,12 +88,13 @@ const Carousel = ({
           return (
             <li
               key={key}
-              className={`carousel__slide relative ${
+              className={`carousel__slide transition-transform-slow relative ${
                 align === `center` ? `flex items-center justify-center` : ``
               }`}
               style={{
-                transform: `translate3d(${activeCarouselIndex * -100}%, 0, 0)`,
-                width: itemWidth
+                width: itemWidth,
+                flex: `0 0 auto`,
+                transform: `translate3d(${activeCarouselIndex * -100}%, 0, 0)`
               }}
             >
               <div className="w-full relative block">{itemJSX}</div>
@@ -86,12 +104,12 @@ const Carousel = ({
       </ul>
 
       {withDots && (
-        <div className="carousel__dots w-full flex items-center justify-center">
+        <div className="carousel__dots w-full absolute bottom-0 right-0 left-0 z-10 mb-6 flex items-center justify-center">
           <button
             type="button"
             className={`${
               activeCarouselIndex === 0 ? `opacity-1` : `opacity-50`
-            } relative block mx-1 bg-${dotColor} rounded-full`}
+            } w-2 h-2 relative block mx-1 bg-${dotColor} rounded-full`}
             onClick={() => setActiveCarouselIndex(0)}
           ></button>
 
@@ -107,7 +125,7 @@ const Carousel = ({
                   activeCarouselIndex === adjustedIndex
                     ? `opacity-1`
                     : `opacity-50`
-                } relative block mx-1 bg-${dotColor} rounded-full`}
+                } w-2 h-2 relative block mx-1 bg-${dotColor} rounded-full`}
                 onClick={() => setActiveCarouselIndex(adjustedIndex)}
               ></button>
             );
@@ -120,6 +138,7 @@ const Carousel = ({
 
 Carousel.defaultProps = {
   align: `start`,
+  autoPlay: null,
   className: ``,
   dotColor: `white`,
   itemWidth: `100%`,
@@ -129,6 +148,7 @@ Carousel.defaultProps = {
 
 Carousel.propTypes = {
   align: PropTypes.string,
+  autoPlay: PropTypes.number,
   className: PropTypes.string,
   dotColor: PropTypes.string,
   items: PropTypes.node.isRequired,

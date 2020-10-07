@@ -3,9 +3,7 @@
 
 import React from "react";
 import { graphql } from "gatsby";
-import BlogCTA from "~components/BlogCTA";
 import DummyImage from "~components/DummyImage";
-import ImageCTA from "~components/ImageCTA";
 import InstagramGrid from "~components/InstagramGrid";
 import Footer from "~components/Footer";
 import Layout from "~components/Layout";
@@ -60,8 +58,6 @@ const AboutPage = ({ data, location }) => {
             </p>
           </article>
         </section>
-
-        {/* <BlogCTA content="Our story" /> */}
 
         <InstagramGrid heading="Instagram" />
 

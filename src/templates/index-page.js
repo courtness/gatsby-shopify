@@ -3,7 +3,6 @@
 
 import React from "react";
 import { graphql } from "gatsby";
-import BlogCTA from "~components/BlogCTA";
 import DummyImage from "~components/DummyImage";
 import Footer from "~components/Footer";
 import ImageCTA from "~components/ImageCTA";

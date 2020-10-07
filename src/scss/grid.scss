@@ -1,12 +1,12 @@
 $grid_columns: 12;
 $grid_columns_xs: 12;
-$grid_gutter: 8px;
+$grid_gutter: 1.5vw;
 $grid_padding: (
-  xl: 2rem,
-  lg: 2rem,
-  md: 2rem,
-  sm: 2rem,
-  xs: 2rem,
+  xl: 3vw,
+  lg: 3vw,
+  md: 3vw,
+  sm: 6vw,
+  xs: 6vw,
 );
 
 .grid {
@@ -43,7 +43,7 @@ $grid_padding: (
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat($grid_columns, minmax(0, 1fr));
-  grid-gap: $grid_gutter / 2 $grid_gutter;
+  grid-gap: 0 $grid_gutter;
 
   &--nowrap {
     grid-auto-flow: column;

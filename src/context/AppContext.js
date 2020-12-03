@@ -11,7 +11,7 @@ import { fancyError, fancyWarning } from "~utils/helpers";
 import { useTimeout } from "~utils/hooks";
 import {
   getCheckoutURL,
-  getInventoryIdByVariantTitle,
+  getInventoryIdByVariantSku,
   getInventoryLevelsByIds
 } from "~utils/shopify";
 
@@ -424,10 +424,9 @@ const AppProvider = ({ children }) => {
 
     products.forEach(product => {
       product.variants.forEach(variant => {
-        const inventoryId = getInventoryIdByVariantTitle(
+        const inventoryId = getInventoryIdByVariantSku(
           adminProducts.edges,
-          product.handle,
-          variant.title
+          variant.sku
         );
 
         if (inventoryId && inventoryId !== ``) {

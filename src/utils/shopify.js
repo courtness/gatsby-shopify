@@ -8,18 +8,7 @@ import { fancyWarning, shuffleArray } from "~utils/helpers";
 // graphql
 
 export async function getCheckoutURL(cart, currencyCode) {
-  // TODO : functions URL helper
   let url = `${process.env.GATSBY_NETLIFY_FUNCTIONS}/shopify-storefront-graphql`;
-
-  if (
-    process.env.GATSBY_REGION_CODE &&
-    process.env.GATSBY_REGION_CODE !== `` &&
-    process.env.GATSBY_REGION_CODE.toLowerCase() !== `us`
-  ) {
-    url = `${
-      process.env.GATSBY_NETLIFY_FUNCTIONS
-    }/shopify-storefront-graphql-${process.env.GATSBY_REGION_CODE.toLowerCase()}`;
-  }
 
   let lineItemsString = `[`;
 
@@ -69,11 +58,7 @@ export async function getCheckoutURL(cart, currencyCode) {
 //
 // inventory
 
-export function getInventoryIdByVariantTitle(
-  adminProducts,
-  handle,
-  variantTitle
-) {
+export function getInventoryIdByVariantSku(adminProducts, variantSku) {
   let id;
 
   adminProducts.forEach(({ node }) => {
@@ -82,7 +67,7 @@ export function getInventoryIdByVariantTitle(
     }
 
     node.products.forEach(product => {
-      if (id || product.handle !== handle || !product?.variants?.[0]) {
+      if (id || !product?.variants?.[0]) {
         return;
       }
 
@@ -91,7 +76,7 @@ export function getInventoryIdByVariantTitle(
           return;
         }
 
-        if (variant.title === variantTitle) {
+        if (variant.sku === variantSku) {
           id = variant.inventory_item_id;
         }
       });
@@ -102,7 +87,6 @@ export function getInventoryIdByVariantTitle(
 }
 
 export async function getInventoryLevelsByIds(ids) {
-  // TODO : functions URL helper
   let url = `${process.env.GATSBY_NETLIFY_FUNCTIONS}/get-shopify-inventory`;
 
   if (
@@ -204,158 +188,6 @@ export function parseProducts(data) {
   return products;
 }
 
-export function filterProductsByColourVariants(data) {
-  if (!data || !data.allShopifyProduct || !data.allShopifyProduct.edges) {
-    return null;
-  }
-
-  const allProducts = parseProducts(data);
-  const products = [];
-
-  allProducts.forEach(product => {
-    const loadedColours = [];
-
-    if (!product.variants || !product.variants.length) {
-      return;
-    }
-
-    product.variants.forEach(variant => {
-      variant.selectedOptions.forEach(selectedOption => {
-        if (
-          selectedOption.name === `Colour` &&
-          !loadedColours.includes(selectedOption.value)
-        ) {
-          loadedColours.push(selectedOption.value);
-
-          const productClone = JSON.parse(JSON.stringify(product));
-          const variantClone = JSON.parse(JSON.stringify(variant));
-
-          variantClone.selectedOptions = [selectedOption];
-
-          delete productClone.variants;
-
-          productClone.variants = [variantClone];
-
-          if (
-            product.frontmatter &&
-            product.frontmatter.featuredImages &&
-            product.frontmatter.featuredImages.length > 0
-          ) {
-            let matchedVariantImage;
-
-            product.frontmatter.featuredImages.forEach(featuredImage => {
-              if (matchedVariantImage) {
-                return;
-              }
-
-              if (
-                selectedOption.value.toLowerCase() ===
-                featuredImage.colorKey.toLowerCase()
-              ) {
-                [matchedVariantImage] = featuredImage.images;
-              }
-            });
-
-            if (matchedVariantImage) {
-              productClone.variant_image = matchedVariantImage.image;
-            }
-          }
-
-          products.push(productClone);
-        }
-      });
-    });
-  });
-
-  return products;
-}
-
-export function getOtherProducts(data, productIdToExclude, max = 3) {
-  if (!data || !data.allShopifyProduct || !data.allShopifyProduct.edges) {
-    return null;
-  }
-
-  const allColourProducts = shuffleArray(filterProductsByColourVariants(data));
-  const products = [];
-
-  allColourProducts.forEach(product => {
-    if (products.length > max || product.id === productIdToExclude) {
-      return;
-    }
-
-    products.push(product);
-  });
-
-  return products;
-}
-
-export function filterProductsByFeaturedVariants(data) {
-  if (!data || !data.allShopifyProduct || !data.allShopifyProduct.edges) {
-    return null;
-  }
-
-  const allProducts = parseProducts(data);
-
-  const products = [];
-
-  allProducts.forEach(product => {
-    if (
-      !product.frontmatter.featuredSkus ||
-      product.frontmatter.featuredSkus.length === 0
-    ) {
-      return;
-    }
-
-    product.frontmatter.featuredSkus.forEach(featuredVariant => {
-      product.variants.forEach(variant => {
-        if (variant.sku === featuredVariant.featuredSku) {
-          const productClone = JSON.parse(JSON.stringify(product));
-
-          delete productClone.variants;
-
-          productClone.variants = [variant];
-          productClone.variant_image = featuredVariant.featuredSkuImage;
-          productClone.variant_link = true;
-
-          products.push(productClone);
-        }
-      });
-    });
-  });
-
-  return products;
-}
-
-export function parseProductsIntoCollections(data) {
-  if (!data || !data.allShopifyProduct || !data.allShopifyProduct.edges) {
-    return null;
-  }
-
-  const products = parseProducts(data);
-
-  const collections = {
-    undefined: []
-  };
-
-  products.forEach(product => {
-    if (!product.frontmatter.collection) {
-      collections.undefined.push(product);
-
-      return;
-    }
-
-    const { collection } = product.frontmatter;
-
-    if (!collections[collection]) {
-      collections[collection] = [];
-    }
-
-    collections[collection].push(product);
-  });
-
-  return collections;
-}
-
 export function getProductByHandle(handle, products) {
   if (!products || products.length === 0) {
     return null;
@@ -418,14 +250,4 @@ export function getSelectableOptions(product) {
   });
 
   return selectableOptions;
-}
-
-export function truncateProductName(name, maxLength = 50) {
-  if (name.length > maxLength) {
-    name = name.substr(0, maxLength);
-    name = name.substr(0, Math.min(name.length, name.lastIndexOf(` `)));
-    name = `${name} ...`;
-  }
-
-  return name;
 }

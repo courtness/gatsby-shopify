@@ -73,6 +73,7 @@ const query = graphql`
             handle
             variants {
               alternative_id
+              inventory_item_id
               title
             }
           }

@@ -44,7 +44,7 @@
     "gatsby-source-apiserver": "2.1.4",
     "gatsby-source-filesystem": "^2.0.33",
     "gatsby-source-shopify": "^3.2.16",
-    "gatsby-transformer-remark": "^2.3.12",
+    "gatsby-transformer-remark": "^5.25.1",
     "gatsby-transformer-sharp": "^2.1.18",
     "gatsby-transformer-yaml": "^2.1.12",
     "http-proxy-middleware": "^0.20.0",
